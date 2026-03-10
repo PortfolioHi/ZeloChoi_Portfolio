@@ -196,7 +196,7 @@
         body.active .bars-box span { color: var(--accent-color); background: rgba(245, 158, 11, 0.1); }
         body.active .percent-bar { background: linear-gradient(90deg, var(--accent-color), #fbbf24); box-shadow: 0 0 10px rgba(245, 158, 11, 0.5); }
 
-        /* --- TIMELINE (Experience & Education) 完美对齐版 --- */
+        /* --- TIMELINE (Experience) 完美对齐版 --- */
         .timeline-section {
             background: var(--section-bg);
             border-top: 1px solid var(--border-color);
@@ -366,6 +366,27 @@
         body.active .event-list li::before { color: var(--accent-color); }
         .event-list li strong { color: var(--text-color); display: block;}
 
+        /* --- EDUCATION GRID (Side-by-side layout) --- */
+        .education-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* Scroll reveal animation specifically for education cards */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+            height: 100%;
+        }
+
+        .fade-up.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
         /* --- 活动照片 (Event Highlights) --- */
         .events {
@@ -481,6 +502,11 @@
             .about-buttons { justify-content: center; }
             .heading h2 { font-size: 2rem; }
             .events-grid { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+            
+            /* 將學歷區塊變成單行 */
+            .education-grid {
+                grid-template-columns: 1fr;
+            }
 
             /* Timeline Mobile Adjustment - 强制共享相同原点中心 */
             .timeline::after {
@@ -693,17 +719,17 @@
         </div>
     </section>
 
-    <!-- EDUCATION SECTION (NEW TIMELINE) -->
+    <!-- EDUCATION SECTION (Grid Layout) -->
     <section class="timeline-section education-section" id="education">
         <div class="heading">
             <span>Academic Background</span>
             <h2>Education</h2>
         </div>
         
-        <div class="timeline">
+        <div class="education-grid">
             <!-- Education Item 1: Degree -->
-            <div class="timeline-item">
-                <div class="timeline-content">
+            <div class="fade-up">
+                <div class="timeline-content" style="height: 100%;">
                     <span class="timeline-date">May 2018 - May 2021</span>
                     <h3>Bachelor's degree, PSYCHOLOGY</h3>
                     <h4>Tunku Abdul Rahman University of Management and Technology (TARUMT)</h4>
@@ -711,10 +737,9 @@
                 </div>
             </div>
             
-
-            <!-- Education Item 3: Extracurricular -->
-            <div class="timeline-item">
-                <div class="timeline-content">
+            <!-- Education Item 2: Extracurricular -->
+            <div class="fade-up">
+                <div class="timeline-content" style="height: 100%;">
                     <span class="timeline-date">Academic Years 2018 - 2021</span>
                     <h3>Activities and Societies</h3>
                     <h4>Student Leadership & Facilitation</h4>
@@ -749,7 +774,7 @@
             <div class="event-img"><img src="img/img2.jpg" alt="Event Photo 2"></div>
             <div class="event-img"><img src="img/img3.jpg" alt="Event Photo 3"></div>
             <div class="event-img"><img src="img/img4.jpg" alt="Event Photo 4"></div>
-
+        </div>
     </section>
 
 
@@ -841,7 +866,7 @@
             document.getElementById("myBar").style.width = scrolled + "%";
         }
 
-        // Timeline Scroll Animation (Intersection Observer)
+        // Timeline & Education Cards Scroll Animation (Intersection Observer)
         const timelineObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -850,8 +875,9 @@
             });
         }, { threshold: 0.1 });
 
-        const timelineItems = document.querySelectorAll('.timeline-item');
-        timelineItems.forEach(item => {
+        // Update selector to track both timeline items and the new education grid items
+        const animateItems = document.querySelectorAll('.timeline-item, .fade-up');
+        animateItems.forEach(item => {
             timelineObserver.observe(item);
         });
 
