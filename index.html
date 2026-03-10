@@ -9,7 +9,6 @@
     <link rel="icon" href="img/Me_Cartoon.png" type="image/png">
     <title>Professional Portfolio</title>
     
-    <!-- Navbar Box Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
 
     <style>
@@ -196,13 +195,10 @@
         body.active .bars-box span { color: var(--accent-color); background: rgba(245, 158, 11, 0.1); }
         body.active .percent-bar { background: linear-gradient(90deg, var(--accent-color), #fbbf24); box-shadow: 0 0 10px rgba(245, 158, 11, 0.5); }
 
-        /* --- TIMELINE (Experience & Education) 完美对齐版 --- */
+        /* --- TIMELINE (Experience) 完美对齐版 --- */
         .timeline-section {
             background: var(--section-bg);
             border-top: 1px solid var(--border-color);
-        }
-        .education-section {
-            background: var(--bg-color); /* 区分两部分的背景颜色 */
         }
 
         .timeline {
@@ -220,7 +216,7 @@
             top: 0;
             bottom: 0;
             left: 50%;
-            transform: translateX(-50%); /* 精准中心对齐，抛弃容易出现误差的 margin-left */
+            transform: translateX(-50%);
             border-radius: 4px;
             opacity: 0.3;
         }
@@ -249,41 +245,46 @@
             left: 50%;
         }
 
-        /* 圆点精准对齐设置 */
+        /* 圆点：未悬浮时就有颜色，无需 glow */
         .timeline-item::after {
             content: '';
             position: absolute;
             width: 24px;
             height: 24px;
-            background: var(--card-bg);
+            background: var(--main-color);
             border: 4px solid var(--main-color);
             border-radius: 50%;
             top: 25px;
             z-index: 1;
             transition: var(--transition);
         }
-        body.active .timeline-item::after { border-color: var(--accent-color); }
+        body.active .timeline-item::after { 
+            background: var(--accent-color); 
+            border-color: var(--accent-color); 
+        }
         
+        /* 圆点：只有 hover 时候才发光 (glow) */
         .timeline-item:hover::after {
-            background: var(--main-color);
             box-shadow: 0 0 15px var(--main-color);
         }
-        body.active .timeline-item:hover::after { background: var(--accent-color); box-shadow: 0 0 15px var(--accent-color); }
+        body.active .timeline-item:hover::after { 
+            box-shadow: 0 0 15px var(--accent-color); 
+        }
 
         /* 左侧项目：圆点对齐最右侧并强制中心居中 */
-        .timeline-item:nth-child(odd)::after {
+        .timeline-item:nth-child(odd):after {
             right: 0;
             transform: translateX(50%);
         }
 
         /* 右侧项目：圆点对齐最左侧并强制中心居中 */
-        .timeline-item:nth-child(even)::after {
+        .timeline-item:nth-child(even):after {
             left: 0;
             transform: translateX(-50%);
         }
 
-        /* 时间轴卡片 */
-        .timeline-content {
+        /* 时间轴卡片 与 教育卡片公用样式 */
+        .timeline-content, .education-card {
             padding: 30px;
             background: var(--card-bg);
             border-radius: 16px;
@@ -292,12 +293,12 @@
             position: relative;
             transition: var(--transition);
         }
-        .timeline-content:hover {
+        .timeline-content:hover, .education-card:hover {
             transform: translateY(-5px);
             box-shadow: var(--shadow-lg);
             border-color: var(--main-color);
         }
-        body.active .timeline-content:hover { border-color: var(--accent-color); }
+        body.active .timeline-content:hover, body.active .education-card:hover { border-color: var(--accent-color); }
 
         .timeline-date {
             font-size: 0.9rem;
@@ -311,21 +312,21 @@
         }
         body.active .timeline-date { color: var(--accent-color); background: rgba(245, 158, 11, 0.1); }
 
-        .timeline-content h3 {
+        .timeline-content h3, .education-card h3 {
             font-size: 1.4rem;
             color: var(--text-color);
             font-weight: 700;
             margin-bottom: 5px;
         }
 
-        .timeline-content h4 {
+        .timeline-content h4, .education-card h4 {
             font-size: 1rem;
             color: var(--text-muted);
             font-weight: 500;
             margin-bottom: 15px;
         }
 
-        .timeline-content p {
+        .timeline-content p, .education-card p {
             font-size: 0.95rem;
             color: var(--text-muted);
             line-height: 1.6;
@@ -346,18 +347,18 @@
             border-radius: 6px;
             border: 1px solid var(--border-color);
         }
-        
-        /* 针对很长的文段 (Abstract) 做的特别排版 */
-        .abstract-box {
-            background: rgba(13, 148, 136, 0.05);
-            padding: 15px;
-            border-left: 4px solid var(--main-color);
-            border-radius: 0 8px 8px 0;
-            margin-top: 15px;
-            font-size: 0.9rem !important;
-            text-align: justify;
+
+        /* --- EDUCATION SECTION (左右双列并排) --- */
+        .education-section {
+            background: var(--bg-color); /* 区分两部分的背景颜色 */
         }
-        body.active .abstract-box { background: rgba(245, 158, 11, 0.05); border-left-color: var(--accent-color); }
+        .education-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
         
         /* Event List in Education */
         .event-list { margin-top: 15px;}
@@ -481,6 +482,9 @@
             .about-buttons { justify-content: center; }
             .heading h2 { font-size: 2rem; }
             .events-grid { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+            
+            /* Education 网格在手机端变成单列 */
+            .education-grid { grid-template-columns: 1fr; }
 
             /* Timeline Mobile Adjustment - 强制共享相同原点中心 */
             .timeline::after {
@@ -529,7 +533,6 @@
         <div class="bx bx-moon" id="darkmode"></div> 
     </header>
 
-    <!-- HOME SECTION -->
     <section class="home" id="home">
         <div class="social">
             <a href="https://www.linkedin.com/in/zelo-choi-0a65a8220/" target="_blank"><i class='bx bxl-linkedin' ></i></a>
@@ -537,12 +540,10 @@
             <a href="https://api.whatsapp.com/send?phone=60104316337" target="_blank"><i class='bx bxl-whatsapp' ></i></a>        
         </div>
         <div class="home-img">
-            <!-- 建议替换成你朋友的照片或适合的插图 -->
             <img src="img/Me_Cartoon.png" alt="Profile Character">
         </div>
         <div class="home-text">
             <span>Hello, I'm</span>
-            <!-- 修改姓名 -->
             <h1>Zelo Choi</h1>
             <h2>Lead Generator & Marketing Professional</h2> 
             <br>
@@ -550,7 +551,6 @@
         </div>
     </section>
     
-    <!-- ABOUT SECTION -->
     <section class="about" id="about">
         <div class="heading">
             <span>Introduction</span>
@@ -585,7 +585,6 @@
         </div>
     </section>
     
-    <!-- SKILLS SECTION -->
     <section class="skills" id="skills">
         <div class="heading">
             <span>My Expertise</span>
@@ -636,7 +635,6 @@
         </div>
     </section>
 
-    <!-- EXPERIENCE SECTION (NEW TIMELINE) -->
     <section class="timeline-section" id="experience">
         <div class="heading">
             <span>Career Path</span>
@@ -644,7 +642,6 @@
         </div>
         
         <div class="timeline">
-            <!-- Experience Item 1 -->
             <div class="timeline-item">
                 <div class="timeline-content">
                     <span class="timeline-date">May 2024 - April 2026 (2 yrs)</span>
@@ -659,7 +656,6 @@
                 </div>
             </div>
             
-            <!-- Experience Item 2 -->
             <div class="timeline-item">
                 <div class="timeline-content">
                     <span class="timeline-date">Aug 2022 - Mar 2024 (1 yr 8 mos)</span>
@@ -676,7 +672,6 @@
                 </div>
             </div>
 
-            <!-- Experience Item 3 -->
             <div class="timeline-item">
                 <div class="timeline-content">
                     <span class="timeline-date">Oct 2021 - Nov 2022 (1 yr 2 mos)</span>
@@ -693,51 +688,42 @@
         </div>
     </section>
 
-    <!-- EDUCATION SECTION (NEW TIMELINE) -->
-    <section class="timeline-section education-section" id="education">
+    <section class="education-section" id="education">
         <div class="heading">
             <span>Academic Background</span>
             <h2>Education</h2>
         </div>
         
-        <div class="timeline">
-            <!-- Education Item 1: Degree -->
-            <div class="timeline-item">
-                <div class="timeline-content">
-                    <span class="timeline-date">May 2018 - May 2021</span>
-                    <h3>Bachelor's degree, PSYCHOLOGY</h3>
-                    <h4>Tunku Abdul Rahman University of Management and Technology (TARUMT)</h4>
-                    <p><i class='bx bxs-graduation'></i> Grade: 3.2 CGPA</p>
-                </div>
+        <div class="education-grid">
+            <div class="education-card">
+                <span class="timeline-date">May 2018 - May 2021</span>
+                <h3>Bachelor's degree, PSYCHOLOGY</h3>
+                <h4>Tunku Abdul Rahman University of Management and Technology (TARUMT)</h4>
+                <p><i class='bx bxs-graduation'></i> Grade: 3.2 CGPA</p>
             </div>
             
-
-            <!-- Education Item 3: Extracurricular -->
-            <div class="timeline-item">
-                <div class="timeline-content">
-                    <span class="timeline-date">Academic Years 2018 - 2021</span>
-                    <h3>Activities and Societies</h3>
-                    <h4>Student Leadership & Facilitation</h4>
-                    <ul class="event-list">
-                        <li>
-                            <strong>Adjustment To Campus Life (E-Atcl 2020) & (Atcl 2019)</strong>
-                            Role: Volunteer/Facilitator
-                        </li>
-                        <li>
-                            <strong>Programme Organisational Structure</strong>
-                            Role: Assistant Programme Rep (19/20) & Programme Rep (18/19)
-                        </li>
-                        <li>
-                            <strong>Element Night 2019</strong>
-                            Role: Organising Committee Member
-                        </li>
-                    </ul>
-                </div>
+            <div class="education-card">
+                <span class="timeline-date">Academic Years 2018 - 2021</span>
+                <h3>Activities and Societies</h3>
+                <h4>Student Leadership & Facilitation</h4>
+                <ul class="event-list">
+                    <li>
+                        <strong>Adjustment To Campus Life (E-Atcl 2020) & (Atcl 2019)</strong>
+                        Role: Volunteer/Facilitator
+                    </li>
+                    <li>
+                        <strong>Programme Organisational Structure</strong>
+                        Role: Assistant Programme Rep (19/20) & Programme Rep (18/19)
+                    </li>
+                    <li>
+                        <strong>Element Night 2019</strong>
+                        Role: Organising Committee Member
+                    </li>
+                </ul>
             </div>
         </div>
     </section>
 
-    <!-- EVENT HIGHLIGHTS SECTION -->
     <section class="events" id="events">
         <div class="heading">
             <span>Memories & Moments</span>
@@ -749,11 +735,10 @@
             <div class="event-img"><img src="img/img2.jpg" alt="Event Photo 2"></div>
             <div class="event-img"><img src="img/img3.jpg" alt="Event Photo 3"></div>
             <div class="event-img"><img src="img/img4.jpg" alt="Event Photo 4"></div>
-
+        </div>
     </section>
 
 
-    <!-- FOOTER SECTION -->
     <div class="footer" id="contact">
         <h2>Contact Me</h2> 
         <div class="footer-social">
@@ -767,13 +752,11 @@
         <p>Created With ❤️ By <a href="#">Zelo Choi</a> | All Rights Reserved.</p>
     </div>
         
-    <!-- Lightbox (图片放大弹窗) Element -->
     <div class="lightbox" id="lightbox">
         <span class="lightbox-close"><i class='bx bx-x'></i></span>
         <img src="" alt="Event Preview">
     </div>
 
-    <!-- 滚动进度条 -->
     <div class="bottom">
         <div class="progress-container">
             <div class="progress-bar" id="myBar"></div>
